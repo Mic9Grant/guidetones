@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!--
+  Guide Tones, Shells & Intervals — an interactive jazz voice-leading lesson
+  © 2026 Danvion Michael Grant — all rights reserved
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Danvion Michael Grant">
+<meta name="copyright" content="© 2026 Danvion Michael Grant — all rights reserved">
+<title>Guide Tones, Shells &amp; Intervals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* © 2026 Danvion Michael Grant — all rights reserved */
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2533; --muted:#5a667a; --line:#d3d9e4;
+  --root:#b8862b; --root-soft:#f3e6c8; --tri:#2f8f86; --tri-soft:#d3ece8; --ext:#7a5cc2; --ext-soft:#e7e0f6;
+  --col:#8a97ab; --key-w:#ffffff; --key-b:#1c2533; --warn:#c2554b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16202c; --panel:#1e2a39; --ink:#e9edf3; --muted:#9aa7ba; --line:#33435a;
+    --root:#d9ab52; --root-soft:#4a3c1f; --tri:#5fc1b5; --tri-soft:#1f4642; --ext:#a58be6; --ext-soft:#332a4d;
+    --col:#7f8ca1; --key-w:#dfe5ee; --key-b:#0f1620; --warn:#e27a70;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16202c; --panel:#1e2a39; --ink:#e9edf3; --muted:#9aa7ba; --line:#33435a;
+  --root:#d9ab52; --root-soft:#4a3c1f; --tri:#5fc1b5; --tri-soft:#1f4642; --ext:#a58be6; --ext-soft:#332a4d;
+  --col:#7f8ca1; --key-w:#dfe5ee; --key-b:#0f1620; --warn:#e27a70;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+.page{max-width:1080px;margin:0 auto;padding:28px 20px 16px}
+h1{font:400 clamp(1.9rem,4vw,2.9rem)/1.1 "Young Serif",Georgia,serif;margin:0 0 8px}
+h2{font:400 clamp(1.35rem,2.6vw,1.8rem)/1.2 "Young Serif",Georgia,serif;margin:0 0 10px}
+h3{font:700 1rem "Figtree",sans-serif;margin:18px 0 8px}
+p{margin:0 0 12px;max-width:70ch}
+.lede{color:var(--muted);font-size:1.06rem;max-width:62ch}
+b.r,.c-root{color:var(--root)} b.t,.c-lo{color:var(--tri)} b.x,.c-up{color:var(--ext)}
+section.lesson{padding:40px 0 8px;border-top:1px solid var(--line);margin-top:36px}
+.step-n{font:400 1rem "Young Serif",Georgia,serif;color:var(--muted);margin-right:6px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+button{font:600 .92rem "Figtree",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 13px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--tri);outline-offset:2px}
+button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{font:500 .92rem "Figtree",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+input[type=range]{accent-color:var(--root);vertical-align:middle}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.inline{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;color:var(--muted)}
+.small{font-size:.88rem;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel);margin:0 0 14px}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:700;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+tbody tr.pick{cursor:pointer} tbody tr.pick:hover td{background:var(--bg)}
+tr.on td{background:var(--root-soft)}
+
+/* hero: voice map */
+.hero{display:grid;gap:14px;margin-top:22px}
+.map-wrap{overflow-x:auto}
+#map{display:block;width:100%;min-width:640px;height:auto}
+#map .colbg{fill:transparent;transition:fill .3s}
+#map .colbg.on{fill:var(--root-soft)}
+#map .gridl{stroke:var(--line);stroke-width:1}
+#map .ln{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+#map .ln.faint{opacity:.22}
+#map .ln.lo{stroke:var(--tri)} #map .ln.up{stroke:var(--ext)} #map .ln.rt{stroke:var(--root);stroke-width:2;stroke-dasharray:4 6}
+#map .dot{transition:r .25s}
+#map .dot.rt{fill:var(--root)} #map .dot.lo{fill:var(--tri)} #map .dot.up{fill:var(--ext)} #map .dot.xt{fill:var(--col)}
+#map .dl{font:700 11px "Figtree",sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+#map .cn{font:400 15px "Young Serif",Georgia,serif;fill:var(--ink);text-anchor:middle}
+#map .fm{font:600 11px "Figtree",sans-serif;fill:var(--muted);text-anchor:middle}
+#map .mv{font:600 11px "Figtree",sans-serif;fill:var(--muted);text-anchor:middle}
+#map .hidden{opacity:0;transition:opacity .35s} #map .shown{opacity:1;transition:opacity .35s}
+#map .clk{cursor:pointer;fill:transparent}
+#map .copy{font:500 10px "Figtree",sans-serif;fill:var(--muted);text-anchor:end}
+#reveal{transition:width .6s cubic-bezier(.4,0,.2,1)}
+.caption{min-height:3.4em;font-size:1.02rem;margin:0}
+.caption b{font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.88rem;color:var(--muted)}
+.legend i{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.layers{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.layers button{border:0;border-radius:0;background:transparent;padding:9px 12px}
+.layers button + button{border-left:1px solid var(--line)}
+.layers button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.kb{display:block;width:100%;height:auto}
+.kb .w{fill:var(--key-w);stroke:var(--line)} .kb .b{fill:var(--key-b)}
+.kb rect{transition:fill .25s}
+.kb .k-rt{fill:var(--root)} .kb .k-lo{fill:var(--tri)} .kb .k-up{fill:var(--ext)} .kb .k-xt{fill:var(--col)}
+.kb .mid{font:600 9px "Figtree",sans-serif;fill:var(--muted);text-anchor:middle}
+
+/* guide-tone ruler */
+.ruler{display:flex;gap:3px;margin:8px 0 4px;flex-wrap:wrap}
+.ruler span{width:28px;height:28px;border-radius:6px;background:var(--line);display:grid;place-items:center;font:600 .75rem "Figtree",sans-serif;color:var(--muted);transition:background .25s,color .25s}
+.ruler span.fill{background:var(--tri);color:#fff}
+.ruler.tt span.fill{background:var(--warn)}
+.ruler span.end{background:var(--ext);color:#fff}
+
+/* two voices table */
+.voices td.u{color:var(--ext);font:400 1.15rem "Young Serif",Georgia,serif}
+.voices td.l{color:var(--tri);font:400 1.15rem "Young Serif",Georgia,serif}
+.voices td.cur{background:var(--root-soft)}
+
+/* shell forms */
+.forms{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.forms{grid-template-columns:1fr}}
+.ladder{position:relative;height:220px;border-left:2px solid var(--line);margin:10px 0 8px 30px}
+.ladder .tick{position:absolute;left:-30px;width:24px;text-align:right;font:500 .72rem "Figtree",sans-serif;color:var(--muted);transform:translateY(-50%)}
+.ladder .nb{position:absolute;left:14px;transform:translateY(-50%);transition:top .7s cubic-bezier(.5,0,.2,1);padding:4px 10px;border-radius:8px;font:700 .95rem "Figtree",sans-serif;color:#fff;white-space:nowrap}
+.nb.rt{background:var(--root)} .nb.lo{background:var(--tri)} .nb.up{background:var(--ext)}
+.gap-lab{position:absolute;left:150px;transform:translateY(-50%);transition:top .7s cubic-bezier(.5,0,.2,1);font:600 .88rem "Figtree",sans-serif;color:var(--ink);border-left:3px solid var(--line);padding-left:8px}
+
+/* layers builder */
+.stack{display:flex;flex-direction:column-reverse;gap:6px;min-height:260px;justify-content:flex-start}
+.blk{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);transform-origin:bottom;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.blk b{font:400 1.2rem "Young Serif",Georgia,serif;min-width:2.8em}
+.blk small{color:var(--muted)}
+.blk.rt{border-left:6px solid var(--root)} .blk.lo{border-left:6px solid var(--tri)} .blk.up{border-left:6px solid var(--ext)} .blk.xt{border-left:6px solid var(--col)}
+.blk.out{opacity:.35;text-decoration:line-through}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scaleY(.8)}to{opacity:1;transform:none}}
+.layer-steps{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+
+/* intervals */
+.ivs{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px;margin-bottom:12px}
+.ivs button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;font-weight:400;padding:8px 10px}
+.ivs button b{font-weight:700} .ivs button small{color:var(--muted);font-size:.78rem}
+#ivArc{display:block;width:100%;max-width:560px;height:auto}
+#ivArc .arc{fill:none;stroke:var(--root);stroke-width:3;stroke-dasharray:600;stroke-dashoffset:600}
+#ivArc .arc.go{animation:draw .8s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.thirds{display:flex;flex-direction:column-reverse;gap:0;margin:8px 0}
+.th-note{display:flex;align-items:center;gap:10px}
+.th-note b{font:400 1.25rem "Young Serif",Georgia,serif;width:2.6em;padding:4px 8px;border-radius:8px;text-align:center}
+.th-note b.rt{background:var(--root-soft);color:var(--root)} .th-note b.up{background:var(--tri-soft);color:var(--tri)}
+.th-gap{margin-left:1.2em;padding:4px 0 4px 18px;border-left:2px dashed var(--line);font:600 .85rem "Figtree",sans-serif;color:var(--muted);animation:rise .4s both}
+.th-gap.M{color:var(--ext)}
+.brace{margin-top:8px;font-size:.95rem}
+.inv{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font:400 1.3rem "Young Serif",Georgia,serif}
+.inv .arrow{font-family:"Figtree",sans-serif;color:var(--muted);font-size:1rem}
+.inv .flip{display:inline-block;animation:flip .7s ease}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
+.mix{display:flex;flex-wrap:wrap;gap:14px}
+.notes-list{margin:0;padding-left:1.2em} .notes-list li{margin-bottom:8px;max-width:70ch}
+footer{margin-top:40px;padding:16px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Guide tones, shells and intervals</h1>
+    <p class="lede">Two quiet voices carry every jazz progression. Press play and watch them: the root leaps around, while the <b class="t">3rds</b> and <b class="x">7ths</b> barely move.</p>
+  </header>
+
+  <!-- ================= HERO: voice map ================= -->
+  <div class="hero">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <div class="layers" role="group" aria-label="Voicing layer">
+          <button data-layer="0" aria-pressed="false">Guide tones</button>
+          <button data-layer="1" aria-pressed="true">Shell</button>
+          <button data-layer="2" aria-pressed="false">Rootless</button>
+          <button data-layer="3" aria-pressed="false">Shell + upper structure</button>
+        </div>
+        <div class="row">
+          <button id="prev" aria-label="Previous chord">◀</button>
+          <button id="play" class="primary">▶ Play</button>
+          <button id="next" aria-label="Next chord">▶|</button>
+          <label class="inline"><input type="checkbox" id="loop" checked> Loop</label>
+          <label class="inline">Tempo <input type="range" id="tempo" min="40" max="160" value="84"><span id="tempoV">84</span></label>
+        </div>
+      </div>
+      <div class="map-wrap"><svg id="map" viewBox="0 0 860 380" role="img" aria-label="Voice map of the progression"></svg></div>
+      <p class="caption" id="caption" aria-live="polite"></p>
+      <div class="legend"><span><i style="background:var(--root)"></i>Root</span><span><i style="background:var(--tri)"></i>Lower guide tone</span><span><i style="background:var(--ext)"></i>Upper guide tone</span><span><i style="background:var(--col)"></i>Extensions</span></div>
+    </div>
+    <div class="panel">
+      <svg class="kb" id="kb" viewBox="0 0 640 96" aria-hidden="true"></svg>
+      <div class="mix" style="margin-top:10px">
+        <span class="small">Hear:</span>
+        <label class="inline"><input type="checkbox" class="mx" data-v="rt" checked> Root</label>
+        <label class="inline"><input type="checkbox" class="mx" data-v="lo" checked> Lower voice</label>
+        <label class="inline"><input type="checkbox" class="mx" data-v="up" checked> Upper voice</label>
+        <label class="inline"><input type="checkbox" class="mx" data-v="xt" checked> Extensions</label>
+        <label class="inline">Spotlight <select id="spot"><option value="">Off</option><option value="up">Upper voice</option><option value="lo">Lower voice</option></select></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 1. Guide tones ================= -->
+  <section class="lesson" id="s1">
+    <h2><span class="step-n">1</span>Guide tones: the 3rd and the 7th</h2>
+    <p>Guide tones are the two notes that tell your ear what kind of chord it is. The <b>3rd</b> decides major or minor: E makes C major, E♭ would make it C minor. The <b>7th</b> decides maj7, dominant 7 or m7: B makes Cmaj7, B♭ would make it C7.</p>
+    <p>Everything else is color. The root is usually covered by the bass, the 5th adds little, and the 9th, 11th and 13th are extensions. Cmaj13 has six notes, but E and B alone are enough to say "C major 7." Click a row to hear it and measure the gap.</p>
+    <div class="two">
+      <div class="tbl"><table>
+        <thead><tr><th>Chord</th><th>3rd</th><th>7th</th><th>3rd → 7th</th></tr></thead>
+        <tbody id="gtBody"></tbody>
+      </table></div>
+      <div class="panel">
+        <h3 id="gtTitle" style="margin-top:0">Cmaj13</h3>
+        <p class="small" id="gtText"></p>
+        <div class="ruler" id="ruler" aria-hidden="true"></div>
+        <p id="gtVerdict"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. Two voices ================= -->
+  <section class="lesson" id="s2">
+    <h2><span class="step-n">2</span>Read them as two voices, not pairs</h2>
+    <p>Listing each chord's pair in order (E-B → A-E → G-D…) makes the line look jumpy. Instead, connect each note to the <b>nearest</b> guide tone of the next chord. You get two smooth lines that only step down or hold.</p>
+    <div class="tbl"><table class="voices">
+      <thead><tr><th></th><th>C</th><th>F</th><th>Em</th><th>Am</th><th>Dm</th><th>G</th><th>C</th><th>C</th></tr></thead>
+      <tbody>
+        <tr id="vU"><th>Upper voice</th></tr>
+        <tr id="vL"><th>Lower voice</th></tr>
+      </tbody>
+    </table></div>
+    <div class="row"><button id="singU">▶ Play upper voice alone</button><button id="singL">▶ Play lower voice alone</button><button id="singB">▶ Both voices, no chords</button></div>
+  </section>
+
+  <!-- ================= 3. Circle of fifths ================= -->
+  <section class="lesson" id="s3">
+    <h2><span class="step-n">3</span>Why it works: roots falling in 5ths</h2>
+    <p>From Em onward the roots fall a 5th each time: E → A → D → G → C. On every one of those moves, two things happen at once:</p>
+    <ul class="notes-list">
+      <li>The <b class="x">7th</b> of one chord steps down to become the <b class="t">3rd</b> of the next.</li>
+      <li>The <b class="t">3rd</b> of one chord stays put and becomes the <b class="x">7th</b> of the next.</li>
+    </ul>
+    <p>At the end, in G13 → Cmaj13, the tritone relaxes: F falls a half step to E, and B holds to become the maj7 of C. C → F at the start follows the same rule, since up a 4th is the same as down a 5th. F → Em is the one exception: a step, not a 5th, so both voices slide down a whole step together. Step through the voice map above and the caption narrates each move.</p>
+    <div class="row"><button id="demo5">Show the rule on Dm11 → G13</button><button id="demoTT">Show the tritone resolving</button></div>
+  </section>
+
+  <!-- ================= 4. Shell forms ================= -->
+  <section class="lesson" id="s4">
+    <h2><span class="step-n">4</span>Shells: guide tones with the root underneath</h2>
+    <p>A shell is a three-note chord: <b>root, 3rd and 7th</b>, with the 5th and extensions left out. There are two ways to stack the same notes. <b>Form A</b> is root–3rd–7th; <b>Form B</b> is root–7th–3rd. When roots fall a 5th you alternate A and B, and the guide tones move smoothly by themselves.</p>
+    <div class="row" style="margin-bottom:10px">
+      <label class="inline">Root <select id="fRoot"></select></label>
+      <label class="inline">Chord <select id="fQual"><option value="maj7">maj7</option><option value="7">7</option><option value="m7">m7</option></select></label>
+      <button id="fFlip" class="primary">Flip A ⇄ B</button>
+      <button id="fHear">Hear both</button>
+    </div>
+    <div class="forms">
+      <div class="panel"><h3 style="margin-top:0" id="hA">Form A: root, 3rd, 7th</h3><div class="ladder" id="ladA"></div><p class="small" id="capA"></p></div>
+      <div class="panel"><h3 style="margin-top:0" id="hB">Form B: root, 7th, 3rd</h3><div class="ladder" id="ladB"></div><p class="small" id="capB"></p></div>
+    </div>
+    <h3>Your progression's shells</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Chord</th><th>Shell (low → high)</th><th>Form</th></tr></thead>
+      <tbody id="shBody"></tbody>
+    </table></div>
+    <p class="small">F → Em is the one place the form doesn't switch: the roots move by step, so the whole shape slides down.</p>
+  </section>
+
+  <!-- ================= 5. Layers ================= -->
+  <section class="lesson" id="s5">
+    <h2><span class="step-n">5</span>From shell to full voicing, one layer at a time</h2>
+    <p>Jazz voicings stack in layers, each built on the one before. Pick a chord and build it up; each layer plays as it lands.</p>
+    <div class="layer-steps" id="lChords" role="group" aria-label="Chord to build"></div>
+    <div class="two">
+      <div>
+        <div class="row" style="margin-bottom:10px"><button id="lBuild" class="primary">Build it</button><button id="lReset">Reset</button></div>
+        <ol class="notes-list" id="lSteps">
+          <li><b>Guide tones (3 + 7):</b> 2 notes, the bare identity of the chord.</li>
+          <li><b>Shell (R + 3 + 7):</b> 3 notes, for a pianist with no bassist or a big-band guitarist.</li>
+          <li><b>Rootless (3, 7 + two extensions):</b> 4 notes, when a bassist covers the root.</li>
+          <li><b>Shell + upper-structure triad:</b> the shell in the left hand and a triad in the right. This is the idea behind your wheels.</li>
+        </ol>
+        <p class="small" id="lNote"></p>
+      </div>
+      <div class="panel"><div class="stack" id="lStack" aria-live="polite"></div></div>
+    </div>
+    <h3>Shell plus right-hand color</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Chord</th><th>Left hand (shell)</th><th>Right hand</th><th>Adds</th><th></th></tr></thead>
+      <tbody id="usBody"></tbody>
+    </table></div>
+    <p class="small">The Fmaj13♯11 row is the "Am / F + G" from your chart: the shell carries the root and guide tones, and the G triad supplies the color.</p>
+  </section>
+
+  <!-- ================= 6. Intervals ================= -->
+  <section class="lesson" id="s6">
+    <h2><span class="step-n">6</span>Intervals: the building blocks underneath</h2>
+    <p>An interval is the distance between two notes. Every chord, scale, voicing and progression above is a pattern of intervals. Pick one to hear it and see where it shows up.</p>
+    <div class="ivs" id="ivs"></div>
+    <div class="two">
+      <svg id="ivArc" viewBox="0 0 560 150" aria-hidden="true"></svg>
+      <div><h3 id="ivName" style="margin-top:0"></h3><p id="ivWhere"></p></div>
+    </div>
+
+    <h3>Chords are stacked 3rds</h3>
+    <p>Every seventh chord is three 3rds stacked up; only the order of major (M) and minor (m) 3rds changes. Remove the bottom 3rd and what's left is the upper triad from your wheels.</p>
+    <div class="row" id="stTypes" role="group" aria-label="Chord type"></div>
+    <div class="two" style="margin-top:10px">
+      <div class="thirds" id="thirds"></div>
+      <div><p class="brace" id="brace"></p><button id="stHear">Hear it</button></div>
+    </div>
+
+    <h3>Inversion: flip an interval upside down</h3>
+    <p>An interval and its inversion add up to an octave. Major becomes minor, perfect stays perfect, and the numbers add to 9. That's why shell Form A spaces the guide tones a 5th apart and Form B a 4th apart, and why the tritone (6 + 6 = 12) makes tritone substitution work: G7's B–F is D♭7's F–C♭.</p>
+    <div class="row" style="margin-bottom:10px"><select id="invSel"></select><button id="invGo">Flip it</button></div>
+    <div class="inv" id="inv"></div>
+
+    <h3>Compound intervals and the avoid note</h3>
+    <p>Extensions are compound intervals: 9 = 2nd + octave, 11 = 4th + octave, 13 = 6th + octave. A <b>minor 9th</b> above a chord tone sounds harsh. The natural 11 on a major chord puts F a minor 9th above E, so it's avoided; on a minor chord F sits a major 9th above E♭, which sounds fine.</p>
+    <div class="row"><button id="avMaj">Hear Cmaj7 + 11 (clash)</button><button id="avMin">Hear Cm7 + 11 (smooth)</button><button id="avSharp">Hear Cmaj7 + ♯11 (the fix)</button></div>
+  </section>
+
+  <!-- ================= 7. Practice ================= -->
+  <section class="lesson" id="s7">
+    <h2><span class="step-n">7</span>Put it in your hands</h2>
+    <ol class="notes-list">
+      <li><b>Comping:</b> play only the 3rd and 7th in your right hand with the root in the bass. Clean, and it leaves room for extensions or a singer.</li>
+      <li><b>Soloing:</b> aim for a guide tone on the downbeat when a chord changes. Landing on B over G13, then E over Cmaj13, spells out the changes with no band behind you.</li>
+      <li><b>Writing:</b> either guide-tone line makes a strong melody, bass line or string part.</li>
+      <li><b>Ear:</b> loop the progression and sing just the upper voice (B A G G F F E E), then the lower one. Use the Spotlight menu at the top to bring one voice forward.</li>
+    </ol>
+    <h3>Practical notes</h3>
+    <ul class="notes-list">
+      <li><b>Register:</b> keep the 3rd and 7th roughly between C3 and C5. Below about D3 they turn muddy.</li>
+      <li><b>Bud Powell shells:</b> the two-note version (root + 7th, or root + 3rd/10th) is a classic bebop left-hand sound.</li>
+      <li><b>Guitar:</b> the same shapes are the classic "Freddie Green" voicings: root on the 6th or 5th string, 3rd and 7th on the next two strings.</li>
+    </ul>
+    <div class="row"><button id="drill" class="primary">Start the practice loop (shells only)</button></div>
+  </section>
+
+  <footer>© 2026 Danvion Michael Grant — all rights reserved</footer>
+</div>
+
+<script>
+/* © 2026 Danvion Michael Grant — all rights reserved */
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const NAMES = ['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const nm = m => NAMES[((m % 12) + 12) % 12];
+const nmo = m => nm(m) + (Math.floor(m / 12) - 1);
+
+// ---------- the progression (MIDI; middle C = 60) ----------
+// lo/up = lower and upper guide-tone voices; xt = rootless extensions; rh = right-hand upper structure
+const P = [
+  {n:'Cmaj13',   rn:'Imaj13',     rt:48, lo:64, up:71, form:'A', lo3:true,  xt:[69,74], rh:[74,79,81], rhT:'D – G – A',          rhA:'9, 5, 13'},
+  {n:'Fmaj13♯11',rn:'IVmaj13♯11', rt:41, lo:64, up:69, form:'B', lo3:false, xt:[67,74], rh:[74,79,83], rhT:'G – B – D (G major)', rhA:'9, ♯11, 13'},
+  {n:'Em11',     rn:'iii11',      rt:40, lo:62, up:67, form:'B', lo3:false, xt:[69,71], rh:[69,71,74], rhT:'A – B – D',          rhA:'11, 5, ♭7'},
+  {n:'Am11',     rn:'vi11',       rt:45, lo:60, up:67, form:'A', lo3:true,  xt:[71,74], rh:[71,74,76], rhT:'B – D – E',          rhA:'9, 11, 5'},
+  {n:'Dm11',     rn:'ii11',       rt:50, lo:60, up:65, form:'B', lo3:false, xt:[64,69], rh:[76,79,81], rhT:'E – G – A',          rhA:'9, 11, 5'},
+  {n:'G13',      rn:'V13',        rt:43, lo:59, up:65, form:'A', lo3:true,  xt:[69,76], rh:[69,76],    rhT:'A – E',              rhA:'9, 13'},
+  {n:'Cmaj13',   rn:'Imaj13',     rt:48, lo:59, up:64, form:'B', lo3:false, xt:[62,69], rh:[74,79,81], rhT:'D – G – A',          rhA:'9, 5, 13'},
+  {n:'Cmaj13',   rn:'Imaj13',     rt:48, lo:59, up:64, form:'B', lo3:false, xt:[62,69], rh:[74,79,81], rhT:'D – G – A',          rhA:'9, 5, 13'},
+];
+const MOVES = [
+  '<b>C → F</b> (up a 4th, the same as down a 5th): E, the 3rd of C, holds and becomes the 7th of F. B, the 7th, steps down to A, the 3rd.',
+  '<b>F → Em</b> is a step, not a 5th, so both voices slide down a whole step together: E → D and A → G. The shape stays in Form B.',
+  '<b>Em → Am</b> (down a 5th): G, the 3rd, holds and becomes the 7th of Am. D, the 7th, steps down to C, the 3rd. Form B becomes Form A.',
+  '<b>Am → Dm</b> (down a 5th): C holds and becomes the 7th of Dm. G steps down to F, the 3rd.',
+  '<b>Dm → G</b> (down a 5th): F holds as the 7th of G. C steps down a half step to B. The tritone B–F appears: tension.',
+  '<b>G → C</b>: the tritone resolves. F falls a half step to E, and B holds as the maj7 of C. Home.',
+  '<b>C → C</b>: nothing moves. Let it ring.',
+  '<b>Back to the top.</b> E and B hold as the progression loops.',
+];
+const DESC = i => {
+  const c = P[i], third = c.lo3 ? c.lo : c.up, sev = c.lo3 ? c.up : c.lo;
+  return `<b>${c.n}</b> (${c.rn}), Form ${c.form}: root <b class="r">${nm(c.rt)}</b>, 3rd <b class="${c.lo3 ? 't' : 'x'}">${nm(third)}</b>, 7th <b class="${c.lo3 ? 'x' : 't'}">${nm(sev)}</b>.`;
+};
+
+// ---------- audio ----------
+let actx = null;
+function ctx(){ actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); return actx; }
+function bus(){ const c = ctx(), g = c.createGain(), comp = c.createDynamicsCompressor(); g.gain.value = .8; g.connect(comp); comp.connect(c.destination); return g; }
+function tone(dest, midi, t, dur, vel, kind){
+  const c = ctx(), f = 440 * 2 ** ((midi - 69) / 12), g = c.createGain(), flt = c.createBiquadFilter();
+  flt.type = 'lowpass'; flt.frequency.value = kind === 'rt' ? 1200 : 3800; flt.connect(g); g.connect(dest);
+  const peak = .2 * vel, end = t + dur;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + .008); g.gain.setTargetAtTime(peak * .35, t + .01, .5); g.gain.setTargetAtTime(0, end, .12);
+  [['triangle',1,.6],['sine',2,.12]].forEach(([type, mult, lvl]) => { const o = c.createOscillator(), og = c.createGain(); o.type = type; o.frequency.value = f * mult; og.gain.value = lvl; o.connect(og); og.connect(flt); o.start(t); o.stop(end + .6); });
+}
+function playNotes(list, dur = 1.6, gap = 0){ const b = bus(), t = ctx().currentTime + .04; list.forEach(([m, kind, v], k) => tone(b, m, t + k * gap, dur, v ?? .85, kind)); }
+function playSeq(seqs, step){ const b = bus(), t = ctx().currentTime + .04; seqs.forEach((notes, i) => notes.forEach(m => tone(b, m, t + i * step, step * .95, .85))); }
+
+// ---------- voicing by layer ----------
+let layer = 1;
+function voicing(i, L = layer){
+  const c = P[i], v = [];
+  if (L === 1 || L === 3) v.push([c.rt, 'rt']);
+  v.push([c.lo, 'lo'], [c.up, 'up']);
+  if (L === 2) c.xt.forEach(m => v.push([m, 'xt']));
+  if (L === 3) c.rh.forEach(m => v.push([m, 'xt']));
+  return v;
+}
+
+// ---------- keyboard ----------
+const kbKeys = {};
+(function(){
+  const svg = $('kb'), lo = 36, hi = 89, W = 640 / 31, black = n => [1,3,6,8,10].includes(n % 12); let x = 0;
+  for (let m = lo; m < hi; m++) if (!black(m)){ const r = document.createElementNS(NS, 'rect'); Object.entries({x, y:0, width:W, height:88, rx:2, class:'w'}).forEach(([k, v]) => r.setAttribute(k, v)); r.dataset.c = 'w'; svg.appendChild(r); kbKeys[m] = r;
+    if (m % 12 === 0){ const t = document.createElementNS(NS, 'text'); t.setAttribute('x', x + W / 2); t.setAttribute('y', 82); t.setAttribute('class', 'mid'); t.textContent = 'C' + (m / 12 - 1); svg.appendChild(t); } x += W; }
+  x = 0;
+  for (let m = lo; m < hi; m++){ if (!black(m)){ x += W; continue; } const r = document.createElementNS(NS, 'rect'); Object.entries({x:x - W * .3, y:0, width:W * .6, height:54, rx:1.5, class:'b'}).forEach(([k, v]) => r.setAttribute(k, v)); r.dataset.c = 'b'; svg.appendChild(r); kbKeys[m] = r; }
+})();
+function lightKeys(v){ for (const m in kbKeys){ const k = kbKeys[m], hit = v.find(n => n[0] === +m); k.setAttribute('class', hit ? 'k-' + hit[1] : k.dataset.c); } }
+
+// ---------- voice map ----------
+const X = i => 70 + i * 100, Y = m => 20 + (84 - m) * 6.4;
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
+const map = $('map');
+function buildMap(){
+  map.innerHTML = '';
+  const defs = el('defs', {}, map), cp = el('clipPath', {id:'clip'}, defs); el('rect', {id:'reveal', x:0, y:0, width:X(0) + 12, height:360}, cp);
+  P.forEach((c, i) => el('rect', {x:X(i) - 48, y:0, width:96, height:320, rx:10, class:'colbg', id:'col' + i}, map));
+  [36,48,60,72,84].forEach(m => { el('line', {x1:20, y1:Y(m), x2:840, y2:Y(m), class:'gridl'}, map); const t = el('text', {x:18, y:Y(m) + 4, class:'fm', 'text-anchor':'end'}, map); t.setAttribute('style', 'text-anchor:end'); t.textContent = 'C' + (m / 12 - 1); });
+  const pts = key => P.map((c, i) => `${X(i)},${Y(c[key])}`).join(' ');
+  for (const [k, cls] of [['rt','rt'],['lo','lo'],['up','up']]){
+    el('polyline', {points: pts(k), class:`ln ${cls} faint`, id:'f-' + k}, map);
+    el('polyline', {points: pts(k), class:`ln ${cls}`, 'clip-path':'url(#clip)', id:'b-' + k}, map);
+  }
+  P.forEach((c, i) => {
+    const g = el('g', {id:'g' + i}, map);
+    [[c.rt,'rt'],[c.lo,'lo'],[c.up,'up']].forEach(([m, k]) => { el('circle', {cx:X(i), cy:Y(m), r:11, class:`dot ${k}`, 'data-k':k}, g); const t = el('text', {x:X(i), y:Y(m), class:'dl', 'data-k':k}, g); t.textContent = nm(m); });
+    const xg = el('g', {class:'xt-g', id:'xg' + i}, g);
+    [...new Set([...c.xt, ...c.rh])].forEach(m => { const inXt = c.xt.includes(m), inRh = c.rh.includes(m);
+      el('circle', {cx:X(i) + 18, cy:Y(m), r:6.5, class:'dot xt', 'data-x': (inXt ? 'a' : '') + (inRh ? 'b' : '')}, xg); });
+    const t1 = el('text', {x:X(i), y:338, class:'cn'}, map); t1.textContent = c.n;
+    const t2 = el('text', {x:X(i), y:354, class:'fm'}, map); t2.textContent = 'Form ' + c.form;
+    if (i < P.length - 1){ const d = Math.abs(P[i + 1].lo - c.lo) + Math.abs(P[i + 1].up - c.up); const t3 = el('text', {x:X(i) + 50, y:14, class:'mv'}, map); t3.textContent = d ? d + ' half step' + (d > 1 ? 's' : '') : 'hold'; }
+    const hit = el('rect', {x:X(i) - 48, y:0, width:96, height:360, class:'clk', tabindex:0, role:'button', 'aria-label':`Go to ${c.n}`}, map);
+    hit.addEventListener('click', () => { stop(); go(i, true); });
+    hit.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); stop(); go(i, true); } });
+  });
+  el('text', {x:846, y:376, class:'copy'}, map).textContent = '© 2026 Danvion Michael Grant — all rights reserved';
+}
+function applyLayer(){
+  document.querySelectorAll('#map [data-k="rt"]').forEach(e => e.setAttribute('class', e.getAttribute('class').replace(/ ?(hidden|shown)/g, '') + (layer === 1 || layer === 3 ? ' shown' : ' hidden')));
+  ['f-rt','b-rt'].forEach(id => { const e = $(id); e.style.opacity = layer === 1 || layer === 3 ? '' : '0'; });
+  document.querySelectorAll('#map .dot.xt').forEach(e => { const x = e.dataset.x; e.style.opacity = (layer === 2 && x.includes('a')) || (layer === 3 && x.includes('b')) ? 1 : 0; });
+}
+
+// ---------- transport ----------
+let cur = 0, timer = null;
+function go(i, audible){
+  cur = i;
+  P.forEach((c, k) => $('col' + k).setAttribute('class', 'colbg' + (k === i ? ' on' : '')));
+  $('reveal').style.width = (X(i) + 14) + 'px';
+  document.querySelectorAll('#map .dot').forEach(d => d.setAttribute('r', d.classList.contains('xt') ? 6.5 : 11));
+  document.querySelectorAll(`#g${i} .dot`).forEach(d => d.setAttribute('r', d.classList.contains('xt') ? 8 : 14));
+  const v = voicing(i); lightKeys(v);
+  $('caption').innerHTML = DESC(i) + ' ' + (i < P.length - 1 ? MOVES[i] : MOVES[7]);
+  document.querySelectorAll('.voices td').forEach(td => td.classList.toggle('cur', +td.dataset.i === i));
+  if (audible){
+    const on = {}; document.querySelectorAll('.mx').forEach(x => on[x.dataset.v] = x.checked);
+    const spot = $('spot').value;
+    playNotes(v.filter(n => on[n[1]]).map(([m, k]) => [m, k, spot ? (k === spot ? 1.2 : .35) : .85]), 60 / +$('tempo').value * 2 * .95);
+  }
+}
+function stepDur(){ return 60 / +$('tempo').value * 2 * 1000; }
+function play(){
+  $('play').textContent = '■ Stop';
+  const tick = () => { go(cur, true); timer = setTimeout(() => { if (cur === P.length - 1 && !$('loop').checked){ stop(); return; } cur = (cur + 1) % P.length; tick(); }, stepDur()); };
+  tick();
+}
+function stop(){ clearTimeout(timer); timer = null; $('play').textContent = '▶ Play'; }
+$('play').onclick = () => timer ? stop() : play();
+$('next').onclick = () => { stop(); go((cur + 1) % P.length, true); };
+$('prev').onclick = () => { stop(); go((cur + P.length - 1) % P.length, true); };
+$('tempo').oninput = () => $('tempoV').textContent = $('tempo').value;
+document.querySelectorAll('[data-layer]').forEach(b => b.onclick = () => {
+  layer = +b.dataset.layer; document.querySelectorAll('[data-layer]').forEach(x => x.setAttribute('aria-pressed', x === b)); applyLayer(); go(cur, !timer);
+});
+
+// ---------- 1. guide-tone table ----------
+const IVN = ['unison','minor 2nd','major 2nd','minor 3rd','major 3rd','perfect 4th','tritone','perfect 5th','minor 6th','major 6th','minor 7th','major 7th','octave'];
+const UNIQ = [0,1,2,3,4,5];
+UNIQ.forEach(i => {
+  const c = P[i], third = c.lo3 ? c.lo : c.up, sev = c.lo3 ? c.up : c.lo, iv = ((sev - third) % 12 + 12) % 12;
+  const tr = document.createElement('tr'); tr.className = 'pick'; tr.tabIndex = 0;
+  tr.innerHTML = `<td>${c.n}</td><td class="c-lo">${nm(third)}</td><td class="c-up">${nm(sev)}</td><td>${iv === 6 ? '<b style="color:var(--warn)">tritone</b>' : IVN[iv]}</td>`;
+  const pickIt = () => { document.querySelectorAll('#gtBody tr').forEach(r => r.classList.toggle('on', r === tr)); showGT(i); };
+  tr.onclick = pickIt; tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pickIt(); } };
+  $('gtBody').appendChild(tr);
+});
+function showGT(i){
+  const c = P[i], third = c.lo3 ? c.lo : c.up, sev = c.lo3 ? c.up : c.lo, iv = ((sev - third) % 12 + 12) % 12, tt = iv === 6;
+  $('gtTitle').textContent = c.n;
+  $('gtText').innerHTML = `3rd <b class="t">${nm(third)}</b> up to 7th <b class="x">${nm(sev)}</b>: ${iv} half steps.`;
+  const r = $('ruler'); r.className = 'ruler' + (tt ? ' tt' : ''); r.innerHTML = '';
+  for (let k = 0; k <= 7; k++){ const s = document.createElement('span'); s.textContent = k === 0 ? nm(third) : k; r.appendChild(s); }
+  [...r.children].forEach((s, k) => setTimeout(() => { if (k < iv) s.classList.add('fill'); else if (k === iv){ s.classList.add('end'); s.textContent = nm(sev); } }, 90 * k));
+  $('gtVerdict').innerHTML = tt ? '<b style="color:var(--warn)">A tritone.</b> This is the one unstable interval in the family, and it\'s why G13 needs to resolve. It\'s the tension that pulls back to C.'
+    : '<b>A perfect 5th:</b> stable and open. Nothing here is pulling hard.';
+  const base = 60 + ((third - 60) % 12 + 12) % 12;
+  playNotes([[base, 'lo'], [base + iv, 'up']], 1.2, .45); setTimeout(() => playNotes([[base, 'lo'], [base + iv, 'up']], 1.4), 1000);
+}
+
+// ---------- 2. two voices ----------
+P.forEach((c, i) => { const u = document.createElement('td'), l = document.createElement('td'); u.className = 'u'; l.className = 'l'; u.dataset.i = l.dataset.i = i; u.textContent = nm(c.up); l.textContent = nm(c.lo); $('vU').appendChild(u); $('vL').appendChild(l); });
+const voiceRun = keys => { stop(); const step = stepDur() / 1000; playSeq(P.map(c => keys.map(k => c[k])), step); P.forEach((c, i) => setTimeout(() => go(i, false), i * step * 1000)); };
+$('singU').onclick = () => voiceRun(['up']); $('singL').onclick = () => voiceRun(['lo']); $('singB').onclick = () => voiceRun(['lo', 'up']);
+
+// ---------- 3. rule demos ----------
+$('demo5').onclick = () => { stop(); document.getElementById('map').scrollIntoView({behavior:'smooth', block:'center'}); go(4, true); setTimeout(() => go(5, true), 1500); };
+$('demoTT').onclick = () => { stop(); document.getElementById('map').scrollIntoView({behavior:'smooth', block:'center'}); go(5, true); setTimeout(() => go(6, true), 1500); };
+
+// ---------- 4. shell forms ----------
+const LET = 'CDEFGAB', LPC = [0,2,4,5,7,9,11], ROOTS = ['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+function spell(root, deg, semis){ const pc0 = (LPC[LET.indexOf(root[0])] + (root.includes('♭') ? -1 : root.includes('♯') ? 1 : 0) + 12) % 12, li = (LET.indexOf(root[0]) + deg - 1) % 7;
+  let a = ((pc0 + semis - LPC[li]) % 12 + 12) % 12; if (a > 6) a -= 12; return LET[li] + ({'-2':'𝄫','-1':'♭','0':'','1':'♯','2':'𝄪'})[a]; }
+$('fRoot').innerHTML = ROOTS.map(r => `<option>${r}</option>`).join('');
+let flipped = false;
+function drawForms(){
+  const r = $('fRoot').value, q = $('fQual').value, rpc = ROOTS.indexOf(r), t3 = q === 'm7' ? 3 : 4, t7 = q === 'maj7' ? 11 : 10;
+  const n3 = spell(r, 3, t3), n7 = spell(r, 7, t7), rootM = 48 + rpc - (rpc > 7 ? 12 : 0);
+  const A = {rt:rootM, a:[rootM + 12 + t3, 'lo', n3 + ' (3rd)'], b:[rootM + 12 + t7, 'up', n7 + ' (7th)']};
+  const B = {rt:rootM, a:[rootM + t7, 'up', n7 + ' (7th)'], b:[rootM + 12 + t3, 'lo', n3 + ' (3rd)']};
+  const draw = (id, F, cap, form) => {
+    const box = $(id), lo = rootM - 2, hi = rootM + 26, top = m => (1 - (m - lo) / (hi - lo)) * 100;
+    if (!box.children.length){
+      for (const k of ['rt','n1','n2','gap']){ const d = document.createElement('div'); d.className = k === 'gap' ? 'gap-lab' : 'nb'; d.dataset.k = k; box.appendChild(d); }
+    }
+    const [e0, e1, e2, eg] = box.children;
+    e0.className = 'nb rt'; e0.textContent = r + ' (root)'; e0.style.top = top(F.rt) + '%';
+    e1.className = 'nb ' + F.a[1]; e1.textContent = F.a[2]; e1.style.top = top(F.a[0]) + '%';
+    e2.className = 'nb ' + F.b[1]; e2.textContent = F.b[2]; e2.style.top = top(F.b[0]) + '%';
+    const gap = F.b[0] - F.a[0]; eg.style.top = top((F.a[0] + F.b[0]) / 2) + '%';
+    eg.textContent = `${gap} half steps: ${gap === 6 ? 'tritone' : IVN[gap]}`;
+    $(cap).textContent = form === 'A' ? `Low to high: ${r} – ${n3} – ${n7}. The guide tones sit a ${gap === 6 ? 'tritone' : IVN[gap]} apart.`
+      : `Low to high: ${r} – ${n7} – ${n3}. Same notes, with the 7th tucked under the 3rd: a ${gap === 6 ? 'tritone' : IVN[gap]}.`;
+    return F;
+  };
+  $('hA').textContent = flipped ? 'Form B: root, 7th, 3rd' : 'Form A: root, 3rd, 7th'; $('hB').textContent = flipped ? 'Form A: root, 3rd, 7th' : 'Form B: root, 7th, 3rd';
+  const fa = draw('ladA', flipped ? B : A, 'capA', flipped ? 'B' : 'A'), fb = draw('ladB', flipped ? A : B, 'capB', flipped ? 'A' : 'B');
+  return {A, B};
+}
+$('fFlip').onclick = () => { flipped = !flipped; const f = drawForms(); const F = flipped ? f.B : f.A; playNotes([[F.rt, 'rt'], [F.a[0], F.a[1]], [F.b[0], F.b[1]]], 1.3); };
+$('fHear').onclick = () => { const {A, B} = drawForms(); playNotes([[A.rt, 'rt'], [A.a[0], 'lo'], [A.b[0], 'up']], 1.2); setTimeout(() => playNotes([[B.rt, 'rt'], [B.a[0], 'up'], [B.b[0], 'lo']], 1.2), 1300); };
+['fRoot', 'fQual'].forEach(id => $(id).onchange = () => { drawForms(); });
+P.slice(0, 7).forEach((c, i) => { const tr = document.createElement('tr'); tr.className = 'pick'; tr.tabIndex = 0;
+  const notes = [c.rt, Math.min(c.lo, c.up), Math.max(c.lo, c.up)].map(nm).join(' – ');
+  tr.innerHTML = `<td>${c.n}</td><td>${notes}</td><td>${c.form} (${c.form === 'A' ? 'R 3 7' : 'R 7 3'})</td>`;
+  const h = () => { stop(); layer = 1; document.querySelectorAll('[data-layer]').forEach(x => x.setAttribute('aria-pressed', x.dataset.layer === '1')); applyLayer(); go(i, true); };
+  tr.onclick = h; tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); h(); } }; $('shBody').appendChild(tr); });
+
+// ---------- 5. layers ----------
+let lSel = 4, lTimers = [];
+[0,1,2,3,4,5].forEach(i => { const b = document.createElement('button'); b.textContent = P[i].n; b.setAttribute('aria-pressed', i === lSel); b.onclick = () => { lSel = i; document.querySelectorAll('#lChords button').forEach(x => x.setAttribute('aria-pressed', x === b)); resetLayers(); }; $('lChords').appendChild(b); });
+const ROLE = (c, m) => { const d = ((m - c.rt) % 12 + 12) % 12; return ({0:'root', 2:'9th', 3:'♭3rd', 4:'3rd', 5:'11th', 6:'♯11', 7:'5th', 9:'13th', 10:'♭7th', 11:'7th'})[d] || ''; };
+function blk(m, k, c, extra){ const d = document.createElement('div'); d.className = 'blk ' + k; d.dataset.m = m; d.innerHTML = `<b>${nm(m)}</b><small>${ROLE(c, m)}${extra ? ' · ' + extra : ''}</small>`; return d; }
+function resetLayers(){ lTimers.forEach(clearTimeout); lTimers = []; $('lStack').innerHTML = ''; $('lNote').textContent = ''; document.querySelectorAll('#lSteps li').forEach(li => li.style.opacity = ''); }
+$('lReset').onclick = resetLayers;
+$('lBuild').onclick = () => {
+  resetLayers(); const c = P[lSel], S = $('lStack'), steps = document.querySelectorAll('#lSteps li');
+  const mark = k => steps.forEach((li, j) => li.style.opacity = j === k ? 1 : .45);
+  const at = (ms, fn) => lTimers.push(setTimeout(fn, ms));
+  at(0, () => { mark(0); S.appendChild(blk(c.lo, 'lo', c)); S.appendChild(blk(c.up, 'up', c)); playNotes([[c.lo, 'lo'], [c.up, 'up']]); $('lNote').textContent = 'Just two notes, and the chord quality is already clear.'; });
+  at(1800, () => { mark(1); S.prepend(blk(c.rt, 'rt', c, 'left hand')); playNotes([[c.rt, 'rt'], [c.lo, 'lo'], [c.up, 'up']]); $('lNote').textContent = `The shell: ${nm(c.rt)} underneath, Form ${c.form}.`; });
+  at(3600, () => { mark(2); S.querySelector('.rt').classList.add('out'); c.xt.forEach(m => S.appendChild(blk(m, 'xt', c, 'extension')));
+    playNotes([[c.rt - 12, 'rt', .6], [c.lo, 'lo'], [c.up, 'up'], ...c.xt.map(m => [m, 'xt'])]); $('lNote').textContent = 'Rootless: the bassist plays the root, so your hands add two colors instead.'; });
+  at(5600, () => { mark(3); S.querySelectorAll('.xt').forEach(e => e.remove()); S.querySelector('.rt').classList.remove('out');
+    c.rh.forEach(m => S.appendChild(blk(m, 'xt', c, 'right hand'))); playNotes([[c.rt, 'rt'], [c.lo, 'lo'], [c.up, 'up'], ...c.rh.map(m => [m, 'xt'])], 2.2);
+    $('lNote').textContent = `Shell in the left hand, ${c.rhT} in the right: adds ${c.rhA}.`; });
+};
+[1,0,4,5].forEach(i => { const c = P[i], tr = document.createElement('tr');
+  tr.innerHTML = `<td>${c.n}</td><td>${[c.rt, Math.min(c.lo, c.up), Math.max(c.lo, c.up)].map(nm).join(' – ')}</td><td>${c.rhT}</td><td>${c.rhA}</td><td><button>Hear</button></td>`;
+  tr.querySelector('button').onclick = () => playNotes([[c.rt, 'rt'], [c.lo, 'lo'], [c.up, 'up'], ...c.rh.map(m => [m, 'xt'])], 2); $('usBody').appendChild(tr); });
+
+// ---------- 6. intervals ----------
+const WHERE = ['','The strongest pull in music: B→C, and F→E when G7 resolves to C.','Stepwise melody and voice leading; the 9th is this, an octave up.',
+  'Makes chords minor; the relative minor is a minor 3rd below (C → A).','Makes chords major.','The circle of 4ths; shell Form B (7th up to 3rd); the 11th, an octave up.',
+  'The tension inside every dominant 7th (B–F in G7).','The circle of 5ths; the 3rd-to-7th gap in maj7 and m7 chords.','The ♭13, a common altered tension.',
+  'The 13th, an octave up.','Sets a chord\'s type: dominant 7 and m7 chords have it.','Sets a chord\'s type: maj7 chords have it.','The same note, doubled; inversions add up to this.'];
+for (let s = 1; s <= 12; s++){ const b = document.createElement('button'); b.innerHTML = `<b>${IVN[s]}</b><small>${s} half step${s > 1 ? 's' : ''} · C→${NAMES[s % 12]}</small>`; b.onclick = () => showIv(s, b); $('ivs').appendChild(b); }
+const ivK = {};
+(function(){ const svg = $('ivArc'), W = 560 / 15, black = n => [1,3,6,8,10].includes(n % 12); let x = 0;
+  for (let m = 60; m <= 84; m++) if (!black(m)){ ivK[m] = el('rect', {x, y:60, width:W, height:88, rx:2, class:'w'}, svg); ivK[m].dataset.c = 'w'; ivK[m].dataset.x = x + W / 2; x += W; }
+  x = 0; for (let m = 60; m <= 84; m++){ if (!black(m)){ x += W; continue; } ivK[m] = el('rect', {x:x - W * .3, y:60, width:W * .6, height:52, rx:1.5, class:'b'}, svg); ivK[m].dataset.c = 'b'; ivK[m].dataset.x = x; }
+  el('path', {id:'arcP', class:'arc', d:''}, svg); svg.setAttribute('class', 'kb'); })();
+function showIv(s, btn){
+  document.querySelectorAll('#ivs button').forEach(b => b.setAttribute('aria-pressed', b === btn));
+  for (const m in ivK){ const k = ivK[m]; k.setAttribute('class', +m === 60 ? 'k-rt' : +m === 60 + s ? 'k-up' : k.dataset.c); }
+  const x1 = +ivK[60].dataset.x, x2 = +ivK[60 + s].dataset.x, a = $('arcP');
+  a.setAttribute('d', `M${x1} 58 Q ${(x1 + x2) / 2} ${58 - 20 - s * 3.2} ${x2} 58`); a.classList.remove('go'); void a.getBoundingClientRect(); a.classList.add('go');
+  $('ivName').textContent = `${IVN[s]}: ${s} half step${s > 1 ? 's' : ''}`; $('ivWhere').textContent = WHERE[s];
+  playNotes([[60, 'lo'], [60 + s, 'up']], 1, .5); setTimeout(() => playNotes([[60, 'lo'], [60 + s, 'up']], 1.3), 1100);
+}
+const STK = {maj7:[4,3,4,'minor','Em over C'], m7:[3,4,3,'major','E♭ over C'], '7':[4,3,3,'diminished','E° over C'], 'm7♭5':[3,3,4,'minor','E♭m over C'], '°7':[3,3,3,'diminished','E♭° over C']};
+Object.keys(STK).forEach((k, i) => { const b = document.createElement('button'); b.textContent = 'C' + k; b.setAttribute('aria-pressed', i === 0); b.onclick = () => { document.querySelectorAll('#stTypes button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawStack(k); }; $('stTypes').appendChild(b); });
+let stCur = 'maj7';
+function drawStack(k){
+  stCur = k; const [a, b, c, q, lab] = STK[k], ints = [0, a, a + b, a + b + c], degs = [1, 3, 5, 7], box = $('thirds'); box.innerHTML = '';
+  ints.forEach((s, i) => {
+    const n = document.createElement('div'); n.className = 'th-note'; n.innerHTML = `<b class="${i ? 'up' : 'rt'}">${spell('C', degs[i], s)}</b><span class="small">${['root','3rd','5th','7th'][i]}</span>`; n.style.animation = `rise .4s ${i * .25}s both`; box.appendChild(n);
+    if (i < 3){ const g = document.createElement('div'); const sz = [a, b, c][i]; g.className = 'th-gap ' + (sz === 4 ? 'M' : ''); g.style.animationDelay = (i * .25 + .12) + 's'; g.textContent = sz === 4 ? 'major 3rd (4)' : 'minor 3rd (3)'; box.appendChild(g); }
+  });
+  $('brace').innerHTML = `Stack: <b>${[a, b, c].map(x => x === 4 ? 'M3' : 'm3').join(' + ')}</b>. Remove the bottom 3rd and the top three notes make a <b>${q}</b> triad: ${lab}.`;
+}
+$('stHear').onclick = () => { const [a, b, c] = STK[stCur], ints = [0, a, a + b, a + b + c]; playNotes(ints.map((s, i) => [60 + s, i ? 'lo' : 'rt']), 1.4, .28); setTimeout(() => playNotes(ints.map((s, i) => [60 + s, i ? 'lo' : 'rt']), 1.6), 1300); };
+const INV = [['minor 2nd',1,'2'],['major 2nd',2,'2'],['minor 3rd',3,'3'],['major 3rd',4,'3'],['perfect 4th',5,'4'],['tritone',6,'4'],['perfect 5th',7,'5'],['minor 6th',8,'6'],['major 6th',9,'6'],['minor 7th',10,'7'],['major 7th',11,'7']];
+$('invSel').innerHTML = INV.map((x, i) => `<option value="${i}"${i === 6 ? ' selected' : ''}>${x[0]}</option>`).join('');
+function drawInv(){
+  const [n, s, num] = INV[+$('invSel').value], is = 12 - s, inv = INV.find(x => x[1] === is), sum = s === 6 ? '6 + 6 = 12 half steps' : `${num} + ${inv[2]} = 9 · ${s} + ${is} = 12 half steps`;
+  $('inv').innerHTML = `<span>C → ${NAMES[s]} <small class="small">${n}</small></span><span class="arrow">flips to</span><span class="flip">${NAMES[s]} → C <small class="small">${inv[0]}</small></span><span class="small" style="font-family:Figtree">${sum}</span>`;
+  playNotes([[60, 'lo'], [60 + s, 'up']], .9, .4); setTimeout(() => playNotes([[60 + s, 'up'], [72, 'lo']], 1.1, .4), 1000);
+}
+$('invGo').onclick = drawInv; $('invSel').onchange = drawInv;
+$('avMaj').onclick = () => playNotes([[48, 'rt'], [64, 'lo'], [67, 'xt'], [71, 'up'], [77, 'xt']], 2.2);
+$('avMin').onclick = () => playNotes([[48, 'rt'], [63, 'lo'], [67, 'xt'], [70, 'up'], [77, 'xt']], 2.2);
+$('avSharp').onclick = () => playNotes([[48, 'rt'], [64, 'lo'], [67, 'xt'], [71, 'up'], [78, 'xt']], 2.2);
+
+// ---------- 7. practice ----------
+$('drill').onclick = () => { layer = 1; document.querySelectorAll('[data-layer]').forEach(x => x.setAttribute('aria-pressed', x.dataset.layer === '1')); applyLayer();
+  $('loop').checked = true; document.querySelectorAll('.mx').forEach(x => x.checked = x.dataset.v !== 'xt'); $('map').scrollIntoView({behavior:'smooth', block:'center'}); stop(); cur = 0; play(); };
+
+// ---------- init ----------
+buildMap(); applyLayer(); go(0, false); drawForms(); drawStack('maj7');
+document.querySelector('#gtBody tr').classList.add('on');
+(function(){ const c = P[0]; $('gtTitle').textContent = c.n; $('gtText').innerHTML = 'Click a row to measure the gap from the 3rd up to the 7th.'; })();
+// one orchestrated entrance: the two voices draw across the map once
+(function(){ const r = $('reveal'); if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; r.style.transition = 'none'; r.style.width = '860px';
+  requestAnimationFrame(() => { r.style.width = '0px'; requestAnimationFrame(() => { r.style.transition = 'width 2.2s cubic-bezier(.4,0,.2,1)'; r.style.width = '860px'; setTimeout(() => { r.style.transition = ''; go(0, false); }, 2400); }); }); })();
+</script>
+</body>
+</html>
